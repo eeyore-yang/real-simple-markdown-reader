@@ -27,11 +27,12 @@ It opens in reading mode, and one button switches to editing.
 
 ## Getting the APK
 
-Every push is built by GitHub Actions.
+Every push is built by GitHub Actions and published as the **latest** release.
 
-1. Repository → **Actions** tab → open the latest **Build APK** run
-2. Download **real-simple-md-editor-apk** under *Artifacts* and unzip it
-3. Install `app-debug.apk` on the phone (allow installing from unknown sources)
+Direct download (always the newest build):
+https://github.com/eeyore-yang/real-simple-markdown-reader/releases/latest/download/RealSimpleMD.apk
+
+Or open the repository's **Releases** page and tap `RealSimpleMD.apk` under *Assets*.
 
 All builds are signed with the same key (`keystore/debug.keystore`), so a new
 build installs over the old one without uninstalling. This key is for personal
