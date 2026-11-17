@@ -19,7 +19,7 @@ It opens in reading mode, and one button switches to editing.
 |---|---|
 | Ctrl + mouse wheel | Font size bigger / smaller |
 | Ctrl + `+` / Ctrl + `-` | Font size bigger / smaller |
-| Ctrl + `0` | Reset font size |
+| Ctrl + `0` (or tap the % button) | Reset font size to 100% |
 | Ctrl + E | Toggle reading / editing |
 | Ctrl + S | Save now |
 | Ctrl + O | Open a file |

@@ -86,8 +86,10 @@ fun DocumentScreen(vm: MainViewModel, snackbar: SnackbarHostState) {
                     }
                 },
                 actions = {
-                    TextButton(onClick = { vm.zoom(-1f) }) { Text("A−") }
-                    TextButton(onClick = { vm.zoom(1f) }) { Text("A+") }
+                    TextButton(onClick = { vm.zoomStep(-1) }) { Text("A−") }
+                    // Shows the current zoom; tap to go back to 100% (Ctrl+0).
+                    TextButton(onClick = vm::resetFont) { Text("${vm.zoomPercent}%") }
+                    TextButton(onClick = { vm.zoomStep(1) }) { Text("A+") }
                     IconButton(onClick = vm::toggleEditing) {
                         if (vm.editing) {
                             Icon(Icons.Filled.Check, contentDescription = "읽기 모드 (Ctrl+E)")

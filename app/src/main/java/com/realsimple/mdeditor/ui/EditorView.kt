@@ -21,6 +21,7 @@ class EditorView(context: Context) : EditText(context) {
 
     private var loadedDocId = -1
     private var settingText = false
+    private var lineHeightSet = false
 
     init {
         background = null
@@ -31,7 +32,7 @@ class EditorView(context: Context) : EditText(context) {
         imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI
         setHorizontallyScrolling(false)
         isVerticalScrollBarEnabled = true
-        setLineSpacing(0f, 1.45f)
+        includeFontPadding = false
         breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
         hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
         if (Build.VERSION.SDK_INT >= 33) {
@@ -55,7 +56,11 @@ class EditorView(context: Context) : EditText(context) {
             setSelection(0)
             scrollTo(0, 0)
         }
-        if (textSize != spToPx(sizeSp)) setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
+        if (textSize != spToPx(sizeSp) || !lineHeightSet) {
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
+            setLineHeightRatio(1.5f)
+            lineHeightSet = true
+        }
         if (currentTextColor != textColor) setTextColor(textColor)
         setHintTextColor(hintColor)
     }

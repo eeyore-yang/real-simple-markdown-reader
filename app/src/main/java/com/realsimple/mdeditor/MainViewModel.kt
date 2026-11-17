@@ -19,12 +19,14 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
-import kotlin.math.pow
+import kotlin.math.roundToInt
 
 const val DEFAULT_FONT_SIZE = 17f
-const val MIN_FONT_SIZE = 10f
-const val MAX_FONT_SIZE = 48f
-private const val ZOOM_STEP = 1.1f
+const val MIN_FONT_SIZE = DEFAULT_FONT_SIZE * 0.5f
+const val MAX_FONT_SIZE = DEFAULT_FONT_SIZE * 3f
+
+/** Browser-style zoom levels, in percent of the default size. */
+private val ZOOM_LEVELS = intArrayOf(50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300)
 private const val AUTOSAVE_DELAY_MS = 1500L
 
 enum class SaveState { Saved, Dirty, Saving, Failed }
@@ -69,10 +71,28 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         prefs.fontSize = fontSize
     }
 
-    /** [steps] may be fractional (high-resolution wheels and touchpads). */
-    fun zoom(steps: Float) {
-        scaleFont(ZOOM_STEP.pow(steps))
+    /** Current size as a percentage of the default (100% = default). */
+    val zoomPercent: Int get() = (fontSize / DEFAULT_FONT_SIZE * 100).roundToInt()
+
+    /** Step to the next zoom level up (+1) or down (-1), like a browser. */
+    fun zoomStep(direction: Int) {
+        val current = fontSize / DEFAULT_FONT_SIZE * 100
+        val target = if (direction > 0) {
+            ZOOM_LEVELS.firstOrNull { it > current + 0.5f } ?: ZOOM_LEVELS.last()
+        } else {
+            ZOOM_LEVELS.lastOrNull { it < current - 0.5f } ?: ZOOM_LEVELS.first()
+        }
+        fontSize = DEFAULT_FONT_SIZE * target / 100f
         commitFontSize()
+    }
+
+    private var wheelAccumulator = 0f
+
+    /** Ctrl + wheel. Touchpads send fractional amounts; one level per whole notch. */
+    fun zoomWheel(amount: Float) {
+        wheelAccumulator += amount
+        while (wheelAccumulator >= 1f) { zoomStep(1); wheelAccumulator -= 1f }
+        while (wheelAccumulator <= -1f) { zoomStep(-1); wheelAccumulator += 1f }
     }
 
     fun resetFont() {

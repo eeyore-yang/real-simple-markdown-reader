@@ -106,8 +106,8 @@ class MainActivity : ComponentActivity() {
                 KeyEvent.KEYCODE_E -> { { if (event.repeatCount == 0) vm.toggleEditing() } }
                 KeyEvent.KEYCODE_S -> { { if (event.repeatCount == 0) vm.saveNow() } }
                 KeyEvent.KEYCODE_O -> { { if (event.repeatCount == 0) openFile() } }
-                KeyEvent.KEYCODE_EQUALS, KeyEvent.KEYCODE_PLUS, KeyEvent.KEYCODE_NUMPAD_ADD -> { { vm.zoom(1f) } }
-                KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_NUMPAD_SUBTRACT -> { { vm.zoom(-1f) } }
+                KeyEvent.KEYCODE_EQUALS, KeyEvent.KEYCODE_PLUS, KeyEvent.KEYCODE_NUMPAD_ADD -> { { vm.zoomStep(1) } }
+                KeyEvent.KEYCODE_MINUS, KeyEvent.KEYCODE_NUMPAD_SUBTRACT -> { { vm.zoomStep(-1) } }
                 KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_NUMPAD_0 -> { { vm.resetFont() } }
                 else -> null
             }
@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
             (ev.metaState and KeyEvent.META_CTRL_ON) != 0
         ) {
             val steps = ev.getAxisValue(MotionEvent.AXIS_VSCROLL)
-            if (steps != 0f) vm.zoom(steps)
+            if (steps != 0f) vm.zoomWheel(steps)
             return true
         }
         return super.dispatchGenericMotionEvent(ev)
